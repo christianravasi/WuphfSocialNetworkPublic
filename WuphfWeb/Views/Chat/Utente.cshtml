@@ -1,0 +1,169 @@
+﻿@model WuphfWeb.Models.VM.ChatVM
+
+@{
+    ViewData["Title"] = "Chat";
+}
+
+<style>
+    .my-btn {
+        background-color: var(--Primary-Button) !important;
+        color: #fff !important;
+        width: 100%;
+        height: 43px;
+        border-radius: 15px !important;
+    }
+</style>
+
+@if ((bool)Model.Chat.IsUser1)
+{
+    <input hidden value="@Model.Chat.Username1" id="username1input" />
+}
+else
+{
+    <input hidden value="@Model.Chat.Username2" id="username1input" />
+}
+<div class="container py-5">
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-6">
+
+            <div class="card" style="border-color: transparent;">
+
+                <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px; overflow-y: scroll;" id="messages">
+                    @foreach (var message in Model.Chat.Messaggi)
+                    {
+                        <div id="@message.Id">
+                            @if ((bool)Model.Chat.IsUser1)
+                            {
+                                @if (message.Sender == Model.Chat.FkUser1)
+                                {
+                                    <div class="d-flex flex-row justify-content-end pt-1">
+                                        @*<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                                 alt="avatar 1" style="width: 45px; height: 100%;">*@
+                                        <div>
+                                            <div class="small p-2 me-3 mb-1 text-white rounded-3 mess-2" style="display: flex;">
+                                                <p class="pe-3" style="margin-bottom: 0px;">@message.Testo</p>
+                                                <div class="col"></div>
+                                                <div class="small text-white ora">@TimeZoneInfo.ConvertTime(message.DataInvio, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time")).ToString("HH:mm")</div>
+                                            </div>
+                                            @*<p class="small p-2 ms-3 mb-1 rounded-3 mess-2">@message.Testo</p>   *@                                        
+                                        </div>
+                                    </div>
+                                    @*<button onclick=Delete("/Chat/DeleteMessage?id=@message.Id") class="btn btn-danger mx-2">Elimina</button>*@
+                                }
+                                else
+                                {
+                                    <div class="d-flex flex-row justify-content-start">
+                                        <div>
+                                            <div class="small p-2 ms-3 mb-1 rounded-3 mess-1" style="display: flex;">
+                                                <p class="pe-3" style="margin-bottom: 0px;">@message.Testo</p>
+                                                <div class="col"></div>
+                                                <div class="small text-muted ora">@TimeZoneInfo.ConvertTime(message.DataInvio, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time")).ToString("HH:mm")</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                @if (message.Sender == Model.Chat.FkUser2)
+                                {
+                                    <div class="d-flex flex-row justify-content-end pt-1">
+                                        @*<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                            alt="avatar 1" style="width: 45px; height: 100%;">*@
+                                        <div>
+                                            <div class="small p-2 me-3 mb-1 text-white rounded-3 mess-2" style="display: flex;">
+                                                <p class="pe-3" style="margin-bottom: 0px;">@message.Testo</p>
+                                                <div class="col"></div>
+                                                <div class="small text-white ora">@TimeZoneInfo.ConvertTime(message.DataInvio, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time")).ToString("HH:mm")</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<button onclick=Delete("/Chat/DeleteMessage?id=@message.Id") class="btn btn-danger mx-2">Elimina</button>*@
+                                }
+                                else
+                                {
+                                    <div class="d-flex flex-row justify-content-start">
+                                        <div>
+                                            <div class="small p-2 ms-3 mb-1 rounded-3 mess-1" style="display: flex;">
+                                                <p class="pe-3" style="margin-bottom: 0px;">@message.Testo</p>
+                                                <div class="col"></div>
+                                                <div class="small text-muted ora">@TimeZoneInfo.ConvertTime(message.DataInvio, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time")).ToString("HH:mm")</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
+                    @*<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                         alt="avatar 3" style="width: 40px; height: 100%;">*@
+                    <input type="text" id="messageInput" class="form-control form-control-lg" placeholder="Scrivi messaggio" />
+                    <input id="idChat" hidden value="@Model.Chat.Id" />
+                    <input id="token" hidden value="@Model.Token" type="text" />
+                    @if ((bool)Model.Chat.IsUser1)
+                    {
+                        <input type="text" id="receiverInput" value="@Model.Chat.Username2" hidden />
+                    }
+                    else
+                    {
+                        <input type="text" id="receiverInput" value="@Model.Chat.Username1" hidden />
+                    }
+                    <div class="input-group-append" style="margin-left: 5px">
+                        <button type="submit" id="sendButton" class="btn my-btn">Invia</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section scripts{
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
+    <script>
+        var navLink = document.getElementById("nav-chat");
+        navLink.classList += " nav-link-active";
+    </script>
+    <script>
+        function Delete(url) {
+            const id = url.slice(url.indexOf("=") + 1);
+            Swal.fire({
+                title: 'Sei sicuro?',
+                text: "Non si torna indietro!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Conferma',
+                cancelButtonText: 'Annulla'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        success: function (data) {
+                            if (data.success) {
+                                toastr.success(data.message);
+                                $('#' + id).load(document.URL + ' #' + id);
+                            } else {
+                                toastr.error(data.message);
+                            }
+                        }
+                    })
+                }
+            })
+        }
+    </script>
+    <script>
+        test = function (event) {
+            document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+        }
+
+        window.addEventListener('load', test);
+    </script>
+}

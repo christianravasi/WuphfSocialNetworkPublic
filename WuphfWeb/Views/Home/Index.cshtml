@@ -1,0 +1,606 @@
+﻿@using Microsoft.AspNetCore.Components
+@model WuphfWeb.Models.VM.ListPostVM
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    .centered {
+        justify-content: center !important;
+    }
+    .comment {
+        border: none !important;
+    }
+
+        .comment:active {
+            border: none !important;
+            color: var(--Primary-Button) !important;
+        }
+
+    .like {
+        border: none !important;
+    }
+
+        .like:active {
+            border: none !important;
+            color: var(--Primary-Button) !important;
+        }
+
+    .like-active {
+        color: var(--Primary-Button) !important;
+    }
+
+    .my-card {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 450px !important;
+    }
+
+    .pf-pic {
+        width: 39px;
+        float: left;
+        clip-path: circle(35% at center);
+    }
+
+    .my-name {
+        margin: 15px 0 0 40px;
+    }
+
+    .Commento {
+        width: 40px;
+    }
+    /* HOMEPAGE-NOREG */
+
+
+
+    .container-carousel {
+        z-index: 2;
+        margin-top: 150px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 800px !important;
+    }
+
+    .carousel {
+        border-radius: 30px 30px 30px 30px;
+        overflow: hidden;
+        margin-bottom: 4rem;
+    }
+    /* Since positioning the image, we need to help out the caption */
+    .carousel-caption {
+        bottom: 3rem;
+        z-index: 10;
+    }
+
+    /* Declare heights because of positioning of img element */
+    .carousel-item {
+        height: 26rem;
+    }
+
+    .button {
+        margin: 10px;
+        display: inline-block;
+        background: var(--Primary-Button);
+        color: var(--Secondary-Button);
+        text-transform: uppercase;
+        padding: 20px 30px;
+        border-radius: 5px;
+        box-shadow: 0px 17px 10px -10px rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+        -webkit-transition: all ease-in-out 300ms;
+        transition: all ease-in-out 300ms;
+    }
+
+        .button:hover {
+            box-shadow: 0px 37px 20px -20px rgba(0, 0, 0, 0.2);
+            -webkit-transform: translate(0px, -10px) scale(1.2);
+            transform: translate(0px, -10px) scale(1.2);
+        }
+
+    .button-container {
+        text-align: center;
+    }
+
+    .story-container {
+        overflow-x: scroll !important;
+        max-width: 450px !important;
+    }
+
+    .story-border {
+        border-color: var(--Primary-Button) !important;
+    }
+
+    .story-name {
+        max-width: 63px !important;
+    }
+
+    .story-button {
+        width: 63px;
+        padding: 0px;
+        border: none;
+        background-color: #F8F8F8;
+    }
+</style>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="container my-card story-container" style="margin-top: 120px;">
+        <div class="d-flex py-3">
+            <div class="col story-name me-3">
+                <a href="/Storia/CreateStoria" class="story-button">
+                    <img class="rounded-circle border border-3 story-border" src="/images/aggiungi.png" alt="logo" width="63px">
+                </a>
+                <div class="text-center small overflow-x-hidden">Aggiungi</div>
+            </div>
+            @foreach (var storia in Model.Storie)
+            {
+                <div class="col story-name me-3">
+                    <button class="story-button" data-toggle="modal" data-target="#storia-@storia.Id">
+                        @if (storia.FotoProfilo != null)
+                        {
+                            <img class="rounded-circle border border-3 story-border" src="@storia.FotoProfilo" style="width: 63px; border-color: var(--Accent) !important;">
+                        }
+                        else
+                        {
+                            <img class="rounded-circle border border-3 story-border" src="/images/icon.png" style="width: 63px; border-color: var(--Accent) !important;">
+                        }
+                    </button>
+                    <div class="text-center small overflow-x-hidden">@storia.Username</div>
+                    <div class="modal" id="storia-@storia.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">@storia.Username</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body justify-content-end" style="text-align: right;">
+                                    @if (storia.Immagine == null && storia.Video != null)
+                                    {
+                                        <video style="width: 100%; height: 100%;" controls>
+                                            <source src="@storia.Video" type="video/mp4">
+                                            <source src="@storia.Video" type="video/ogg">
+                                            Your browser does not support HTML video.
+                                        </video>
+                                    }
+                                    else
+                                    {
+                                        <img class="bd-placeholder-img card-img-top" width="100%" height="100%" src="@storia.Immagine" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                                    }
+                                </div>
+                                <div class="modal-footer">
+                                    <p class="card-text">@storia.Testo</p>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="modal-dialog modal-dialog-centered centered">
+                            <div class="justify-content-end" style="text-align: right;">
+                                <div>
+                                    @if (storia.Immagine == null && storia.Video != null)
+                                    {
+                                        <video style="width: 100%; height: 100%;" controls>
+                                            <source src="@storia.Video" type="video/mp4">
+                                            <source src="@storia.Video" type="video/ogg">
+                                            Your browser does not support HTML video.
+                                        </video>
+                                    }
+                                    else
+                                    {
+                                        <img style="max-width: 460px;" src="@storia.Immagine" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                                    }
+                                </div>
+                            </div>
+                        </div>*@
+                    </div>
+                </div>
+            }
+            
+        </div>
+    </div>
+    <div class="container">
+        <div id="posts">
+            @if (Model.Posts != null)
+            {
+                foreach (var post in Model.Posts)
+                {
+                    <div class="my-card">
+                        <div class="card shadow-sm ">
+                            <div class="card-body" style="padding: 8px 10px">
+                                <img class="pf-pic" src="@post.FotoProfilo" alt="">
+                                <p class="card-text my-name">@post.Username</p>
+                            </div>
+                            @if (post.Immagine == null && post.Video != null)
+                            {
+                                <video style="width: 100%; height: 100%;" controls>
+                                    <source src="@post.Video" type="video/mp4">
+                                    <source src="@post.Video" type="video/ogg">
+                                    Your browser does not support HTML video.
+                                </video>
+                            }
+                            else
+                            {
+                                <img class="bd-placeholder-img card-img-top" width="100%" height="100%" src="@post.Immagine" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                            }
+                            <div class="card-body">
+                                <div class="d-flex float-end">
+                                    <div class="material-symbols-outlined me-3">sound_detection_dog_barking</div>
+                                    <p id="@post.Id">@post.LikeCount</p>
+                                </div>
+                                <p class="card-text">@post.Testo</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        @if (post.IsLiked)
+                                        {
+                                            <button type="button" class="btn material-symbols-outlined like likeButton like-active" data-liked="1" data-id="@post.Id" id="Like" data-effetto-audio="/audio/dog-crying-for-a-hugwav-14912-[AudioTrimmer (mp3cut.net).mp3">sound_detection_dog_barking</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn material-symbols-outlined like likeButton" data-liked="0" data-id="@post.Id" id="Like" data-effetto-audio="/audio/abbaio.mp3">sound_detection_dog_barking</button>
+                                        }
+                                        <a class="btn" href="/Post/GetPost?id=@post.Id"><i class="bi bi-chat-right-dots"></i></a>
+                                    </div>
+                                    @if (post.DataUpdate != null)
+                                    {
+                                        <small class="text-muted">@TimeZoneInfo.ConvertTime(post.DataCreazione, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time")) (modificato il @TimeZoneInfo.ConvertTime((DateTime)post.DataUpdate, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time")))</small>
+                                    }
+                                    else
+                                    {
+                                        <small class="text-muted">@TimeZoneInfo.ConvertTime(post.DataCreazione, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"))</small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                }               
+            }
+        </div>
+        <div class="text-center px-4" style="margin-top: 80px">
+            <p>Non ci sono altri post disponibili.</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container-carousel">
+        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/images/IMG2.jpg" alt="giraffa" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h1>WUPHF</h1>
+                            <p>Non un semplice social </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="/images/IMG3.jpg" alt="blanco" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h1>ABBAIA IN COMPAGNIA</h1>
+                            <p>Iscriviti a WUPHF per entrare a far parte del branco</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="/images/IMG1.jpg" alt="post" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h1>IMMAGINI O OPINIONI?</h1>
+                            <p>Condividi ciò che più preferisci senza limitazioni</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a asp-controller="Auth" asp-action="Register" class="button" style="text-decoration: none; color: #fff">Registrati</a>
+        <a asp-controller="Auth" asp-action="Login" class="button" style="text-decoration: none; color: #fff">Login</a>
+    </div>
+}
+
+@section Scripts{
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        let nav = document.getElementById('nav');
+        nav.classList += ' fixed-top';
+
+        var navLink = document.getElementById("nav-home");
+        navLink.classList += " nav-link-active";
+
+
+        $(".likeButton").on("click", function () {
+            var id = parseInt($(this).attr("data-id"));
+            var liked = parseInt($(this).attr("data-liked"));
+            var postText = document.getElementById(id.toString());
+            var likeCount = parseInt(postText.innerHTML);
+
+            if (id !== null) {
+
+                $.ajax({
+                    url: "/Home/LikeToPost?id=" + id,
+                    method: "GET",
+                    success: function (result) {
+                        /*$('#' + id).load(document.URL + ' #' + id);*/
+                    },
+                    //error: function (error) {
+                    //    alert("Fail");
+                    //}
+                });
+            }
+            if (liked == 0) {
+                likeCount += 1;
+                postText.innerHTML = likeCount;
+                (this).classList = "btn material-symbols-outlined like likeButton like-active";
+                this.dataset.liked = 1;
+                var audio = new Audio(this.dataset.effettoAudio);
+                audio.bottone_di_riferimento = (this);
+                audio.addEventListener('canplaythrough',
+                    function (evento_load) {
+                        var bottone = evento_load.target.bottone_di_riferimento;
+                        bottone.disabled = false;
+                        bottone.audio_di_riferimento = evento_load.target;
+                        //bottone.addEventListener('click',
+                        //    function (evento_click) {
+                        //        evento_click.target.audio_di_riferimento.play();
+                        //    }
+                        //);
+                        bottone.audio_di_riferimento.play();
+                    }
+                );
+                this.dataset.effettoAudio = "/audio/dog-crying-for-a-hugwav-14912-[AudioTrimmer (mp3cut.net).mp3";
+            }
+            else {
+                likeCount -= 1;
+                postText.innerHTML = likeCount;
+                (this).classList = "btn material-symbols-outlined like likeButton";
+                this.dataset.liked = 0;
+                var audio = new Audio(this.dataset.effettoAudio);
+                audio.bottone_di_riferimento = (this);
+                audio.addEventListener('canplaythrough',
+                    function (evento_load) {
+                        var bottone = evento_load.target.bottone_di_riferimento;
+                        bottone.disabled = false;
+                        bottone.audio_di_riferimento = evento_load.target;
+                        //bottone.addEventListener('click',
+                        //    function (evento_click) {
+                        //        evento_click.target.audio_di_riferimento.play();
+                        //    }
+                        //);
+                        bottone.audio_di_riferimento.play();
+                    }
+                );
+                this.dataset.effettoAudio = "/audio/abbaio.mp3";
+            }
+
+        });
+
+
+        var processing = false;
+        var postsDiv = document.getElementById("posts");
+
+        $(window).on("scroll", function () {
+            if (processing) {
+                return false;
+            }
+            if ($(window).scrollTop() >= ($(document).height() - $(window).height()) - 400) {
+                processing = true; //sets a processing AJAX request flag
+                $.ajax({
+                    url: "/Home/GetNextPosts",
+                    method: "GET",
+                    success: function (result) {
+                        result.data.forEach(UpdatePosts);
+                        $(".likeButton").off("click");
+                        $(".likeButton").on("click", function () {
+                            var id = parseInt($(this).attr("data-id"));
+
+                            var liked = parseInt($(this).attr("data-liked"));
+
+                            var postText = document.getElementById(id.toString());
+
+                            var likeCount = parseInt(postText.innerHTML);
+
+                            if (id !== null) {
+
+                                $.ajax({
+                                    url: "/Home/LikeToPost?id=" + id,
+                                    method: "GET",
+                                    success: function (result) {
+                                        /*$('#' + id).load(document.URL + ' #' + id);*/
+                                    },
+                                    //error: function (error) {
+                                    //    alert("Fail");
+                                    //}
+                                });
+                            }
+                            if (liked == 0) {
+                                likeCount += 1;
+                                postText.innerHTML = likeCount;
+                                (this).classList = "btn material-symbols-outlined like likeButton like-active";
+                                this.dataset.liked = 1;
+                                var audio = new Audio(this.dataset.effettoAudio);
+                                audio.bottone_di_riferimento = (this);
+                                audio.addEventListener('canplaythrough',
+                                    function (evento_load) {
+                                        var bottone = evento_load.target.bottone_di_riferimento;
+                                        bottone.disabled = false;
+                                        bottone.audio_di_riferimento = evento_load.target;
+                                        //bottone.addEventListener('click',
+                                        //    function (evento_click) {
+                                        //        evento_click.target.audio_di_riferimento.play();
+                                        //    }
+                                        //);
+                                        bottone.audio_di_riferimento.play();
+                                    }
+                                );
+                                this.dataset.effettoAudio = "/audio/dog-crying-for-a-hugwav-14912-[AudioTrimmer (mp3cut.net).mp3";
+                            }
+                            else {
+                                likeCount -= 1;
+                                postText.innerHTML = likeCount;
+                                (this).classList = "btn material-symbols-outlined like likeButton";
+                                this.dataset.liked = 0;
+                                var audio = new Audio(this.dataset.effettoAudio);
+                                audio.bottone_di_riferimento = (this);
+                                audio.addEventListener('canplaythrough',
+                                    function (evento_load) {
+                                        var bottone = evento_load.target.bottone_di_riferimento;
+                                        bottone.disabled = false;
+                                        bottone.audio_di_riferimento = evento_load.target;
+                                        //bottone.addEventListener('click',
+                                        //    function (evento_click) {
+                                        //        evento_click.target.audio_di_riferimento.play();
+                                        //    }
+                                        //);
+                                        bottone.audio_di_riferimento.play();
+                                    }
+                                );
+                                this.dataset.effettoAudio = "/audio/abbaio.mp3";
+                            }
+
+                        });
+                        processing = false;
+                        //postsDiv.innerHTML += `<div class="text-center" style="width: 100%"><p>Non ci sono altri post disponibili.</p></div>`;
+                    },
+                });
+            }
+        });
+        function padTo2Digits(num) {
+            return num.toString().padStart(2, '0');
+        }
+
+        function formatDate(date) {
+            return (
+                [
+                    date.getFullYear(),
+                    padTo2Digits(date.getMonth() + 1),
+                    padTo2Digits(date.getDate()),
+                ].join('/') +
+                ' ' +
+                [
+                    padTo2Digits(date.getHours()),
+                    padTo2Digits(date.getMinutes()),
+                    padTo2Digits(date.getSeconds()),
+                ].join(':')
+            );
+        }
+        function UpdatePosts(item, index) {
+
+            if (item.isLiked && item.dataUpdate !== null) {
+                postsDiv.innerHTML += `<div class="my-card">
+                                    <div class="card shadow-sm ">
+                                        <div class="card-body">
+                                            <img class="pf-pic" src="` + item.fotoProfilo + `" alt="">
+                                            <p class="card-text my-name">` + item.username + `</p>
+                                        </div>
+                                        <img class="bd-placeholder-img card-img-top" width="100%" height="100%" src="` + item.immagine + `" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                                        <div class="card-body">
+                                            <p class="card-text">` + item.testo + `</p>
+                                            <p class="card-text" id="` + item.id + `">` + item.likeCount + `</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                <button type="button" class="btn material-symbols-outlined like likeButton like-active" data-liked="1" data-id="` + item.id + `" id="Like" data-effetto-audio="/audio/dog-crying-for-a-hugwav-14912-[AudioTrimmer (mp3cut.net).mp3">sound_detection_dog_barking</button>
+                                                <a class="btn" href="/Post/GetPost?id=` + item.id + `"><i class="bi bi-chat-right-dots"></i></a>
+                                </div><small class="text-muted">` + formatDate(new Date(item.dataCreazione)) + ` (modificato il ` + item.dataUpdate + `)</small>
+                                                </div></div></div></div><br>`;
+            }
+
+            if (item.isLiked && item.dataUpdate == null) {
+                postsDiv.innerHTML += `<div class="my-card">
+                                    <div class="card shadow-sm ">
+                                        <div class="card-body">
+                                            <img class="pf-pic" src="` + item.fotoProfilo + `" alt="">
+                                            <p class="card-text my-name">` + item.username + `</p>
+                                        </div>
+                                        <img class="bd-placeholder-img card-img-top" width="100%" height="100%" src="` + item.immagine + `" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                                        <div class="card-body">
+                                            <p class="card-text">` + item.testo + `</p>
+                                            <p class="card-text" id="` + item.id + `">` + item.likeCount + `</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                <button type="button" class="btn material-symbols-outlined like likeButton like-active" data-liked="1" data-id="` + item.id + `" id="Like" data-effetto-audio="/audio/dog-crying-for-a-hugwav-14912-[AudioTrimmer (mp3cut.net).mp3">sound_detection_dog_barking</button>
+                                                <a class="btn" href="/Post/GetPost?id=` + item.id + `"><i class="bi bi-chat-right-dots"></i></a>
+                                                                                    </div><small class="text-muted">` + formatDate(new Date(item.dataCreazione)) + `</small>
+                                                </div></div></div></div><br>`;
+            }
+
+            if (!item.isLiked && item.dataUpdate !== null) {
+                postsDiv.innerHTML += `<div class="my-card">
+                                    <div class="card shadow-sm ">
+                                        <div class="card-body">
+                                            <img class="pf-pic" src="` + item.fotoProfilo + `" alt="">
+                                            <p class="card-text my-name">` + item.username + `</p>
+                                        </div>
+                                        <img class="bd-placeholder-img card-img-top" width="100%" height="100%" src="` + item.immagine + `" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                                        <div class="card-body">
+                                            <p class="card-text">` + item.testo + `</p>
+                                            <p class="card-text" id="` + item.id + `">` + item.likeCount + `</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                <button type="button" class="btn material-symbols-outlined like likeButton" data-liked="0" data-id="` + item.id + `" id="Like" data-effetto-audio="/audio/abbaio.mp3">sound_detection_dog_barking</button>
+                                                <a class="btn" href="/Post/GetPost?id=` + item.id + `"><i class="bi bi-chat-right-dots"></i></a>
+                                                                                            </div><small class="text-muted">` + formatDate(new Date(item.dataCreazione)) + ` (modificato il ` + item.dataUpdate + `)</small>
+                                                </div></div></div></div><br>`;
+            }
+
+            if (!item.isLiked && item.dataUpdate == null) {
+                postsDiv.innerHTML += `<div class="my-card">
+                                    <div class="card shadow-sm ">
+                                        <div class="card-body">
+                                            <img class="pf-pic" src="` + item.fotoProfilo + `" alt="">
+                                            <p class="card-text my-name">` + item.username + `</p>
+                                        </div>
+                                        <img class="bd-placeholder-img card-img-top" width="100%" height="100%" src="` + item.immagine + `" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                                        <div class="card-body">
+                                                    <p class="card-text">` + item.testo + `</p>
+                                                    <p class="card-text" id="` + item.id + `">` + item.likeCount + `</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                <button type="button" class="btn material-symbols-outlined like likeButton" data-liked="0" data-id="` + item.id + `" id="Like" data-effetto-audio="/audio/abbaio.mp3">sound_detection_dog_barking</button>
+                                                <a class="btn" href="/Post/GetPost?id=` + item.id + `"><i class="bi bi-chat-right-dots"></i></a>
+                                                                                            </div><small class="text-muted">` + formatDate(new Date(item.dataCreazione)) + `</small>
+                                                </div></div></div></div><br>`;
+            }
+        }
+
+        function MostraStoria(id){
+            if (id !== null) {
+
+                $.ajax({
+                    url: "/Storia/GetStoriaJson?id=" + id,
+                    method: "GET",
+                    success: function (result) {
+                        //div storia caricata con i dati ricevuti
+                        console.log(result.model.id);
+                        /*$('#' + id).load(document.URL + ' #' + id);*/
+                    },
+                });
+            }
+        }
+
+        function ChiudiStoria(){
+            //div storia innerHtml = ''
+        }
+    </script>
+    @*<script src="~/js/load-posts.js"></script>*@
+}

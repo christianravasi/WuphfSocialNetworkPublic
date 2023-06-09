@@ -1,0 +1,138 @@
+﻿@model WuphfWeb.Models.VM.ProfileVM
+
+@{
+    ViewData["Title"] = "Profilo";
+}
+
+<style>
+    .my-cont {
+        display: flex;
+        flex-direction: column;
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: center;
+    }
+
+    .titolo{
+      color: var(--Primary);
+      text-decoration: none;
+      font-family: montserrat;
+      font-weight: bolder;
+      font-size: 30px !important;
+      text-align: center;
+    }
+
+    .sottotitolo {
+        color: var(--Primary);
+        text-decoration: none;
+        font-family: montserrat;
+        font-weight: bolder;
+        font-size: 22px !important;
+        text-align: center;
+    }
+
+    .testo {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .my-text {
+        font-family: montserrat;
+    }
+
+    #Formm {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 450px;
+        font-family: montserrat;
+    }
+
+    #iimmgg {
+        width: 45%;
+        height: 45%;
+        position: relative;
+        left: calc(26%);
+        clip-path: circle(35% at center);
+        cursor: pointer;
+    }
+
+    .dat {
+        display: flex;
+        padding: 5px;
+        ;
+    }
+
+    .bi {
+        padding: 5px;
+    }
+    .my-btn {
+      background-color: var(--Primary-Button) !important;
+      color: #fff !important;
+      width: 100%;
+      height: 45px;
+      border-radius: 15px !important;
+    }
+</style>
+
+<div class="py-3">
+    <div class="my-cont">
+        <h1 class="titolo">Account</h1>
+        <h1 class="sottotitolo">Dati</h1>
+        <div class="test" id="Formm">
+            <div class="row mb-2">
+                <label for="colFormLabelSm" class="col-sm-4 col-form-label">Foto profilo</label>
+                <div class="col-sm-8">
+                    <form method="post" asp-action="UpdateProfilePicture" enctype="multipart/form-data">
+                        <input asp-for="ProfilePictureUpdateDTO.UserId" hidden />
+                        <div class="circle">
+                            <input type="file" id="uploadBoxFoto" name="fileFoto" class="form-control" onchange="this.form.submit()" hidden />
+                            <img src="@Model.User.FotoProfilo" class="w-h-100" id="iimmgg">
+                        </div>
+                        @*<button type="submit" class="btn my-btn" id="bottoneConferma" style="display: none;">Conferma modifica</button>*@
+                    </form>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <label for="colFormLabelSm" class="col-sm-4 col-form-label">Nome utente</label>
+                <div class="col-sm-8 dat">
+                    <input disabled class="form-control form-control-sm" id="colFormLabelSm" value="@Model.User.UserName">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <label for="colFormLabelSm" class="col-sm-4 col-form-label" id="EmailSc">Email</label>
+                <div class="col-sm-8 dat">
+                    <input disabled class="form-control form-control-sm" id="colFormLabelSm" value="@Model.User.Email">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <label for="colFormLabelSm" class="col-sm-4 col-form-label">Password</label>
+                <div class="col-sm-8 dat">
+                    <input disabled class="form-control form-control-sm" id="colFormLabelSm" value="password" type="password">
+                    <a href="/Auth/ChangePassword"><i class="bi bi-pencil-square"></i></a>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <a href="https://www.telegram.me/Wuphf_bot?start=@Model.User.TelegramToken" class="btn my-btn" type="submit">Attiva notifiche tramite telegram<i class="bi bi-telegram ms-3"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $("#iimmgg").click(function (e) {
+            $("#uploadBoxFoto").click();
+            //var btn = document.getElementById("bottoneConferma");
+            //btn.style.display = "block";
+        });
+
+        //var loadFile = function (event) {
+        //    var image = document.getElementById("iimmgg");
+        //    image.src = URL.createObjectURL(event.target.files[0]);
+        //};
+
+    </script>
+}

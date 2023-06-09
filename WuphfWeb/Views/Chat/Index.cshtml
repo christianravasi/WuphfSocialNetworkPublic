@@ -1,0 +1,76 @@
+﻿@model IEnumerable<WuphfWeb.Models.DTO.ChatDTO>
+
+@{
+    ViewData["Title"] = "Chat Page";
+}
+
+<style>
+    /* PRE_CHAT */
+
+    .chat-card {
+          max-height: 300px !important;
+          overflow-y:scroll;
+    }
+
+    .chat-container {
+          text-align: center;
+
+    }
+
+    .chat-button {
+          color: #eee !important;
+          border-radius: 0 !important;
+          margin-bottom: 3px;
+          width: 100%;
+          background-color: var(--Primary-Button) !important;
+          font-weight: 600 !important;
+    }
+</style>
+
+<div class="container ">
+    <div class="my-card chat-card shadow-lg">
+        <div class="">
+            <div class="">
+                @foreach (var chat in Model)
+                {
+                    @if (chat.IsUser1 != null)
+                    {
+                        @if ((bool)chat.IsUser1)
+                        {
+                            <div class="chat-container ">
+                                <a class="btn btn-md chat-button" href="/Chat/Utente?id=@chat.Id">
+                                    <img src="/images/icon.png" width="25" alt="icon" />
+                                    <span style="margin-left: 10px;">Chat con @chat.Username2</span>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="chat-container ">
+                                <a class="btn btn-md chat-button" href="/Chat/Utente?id=@chat.Id">
+                                    <img src="/images/icon.png" width="25" alt="icon" />
+                                    <span style="margin-left: 10px;">Chat con @chat.Username1</span>
+                                </a>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<a href="https://web.telegram.org/k/#@paqquito_bot">Parla con noi</a>*@
+<a href="https://telegram.im/WuphfHelper_bot" target="_blank" class="telegramim_button telegramim_shadow telegramim_pulse" style="font-size:19px;width:120px;background:#27A5E7;box-shadow:1px 1px 5px #27A5E7;color:#FFFFFF;border-radius:50px; position: absolute; bottom: 0; right: 0;" title="assistenza"><i></i> Assistenza</a>
+
+@*<div class="commonninja_component pid-fe8b82b4-fe82-4fd6-9655-49e99db6997e"></div>*@
+
+@section scripts{
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script>
+        var navLink = document.getElementById("nav-chat");
+        navLink.classList += " nav-link-active";
+    </script>
+    @*<script src="https://cdn.commoninja.com/sdk/latest/commonninja.js" defer></script>*@
+    <script type="text/javascript">(function () { var script = document.createElement("script"); script.type = "text/javascript"; script.async = true; script.src = "//telegram.im/widget-button/index.php?id=WuphfHelper_bot"; document.getElementsByTagName("head")[0].appendChild(script); })();</script>
+}

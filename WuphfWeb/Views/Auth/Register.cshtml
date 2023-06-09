@@ -1,0 +1,240 @@
+﻿@model WuphfWeb.Models.DTO.RegisterationRequestDTO
+
+@{
+    ViewData["Title"] = "Registrati";
+}
+<style>
+    /*.titolo {
+        color: var(--Primary);
+        text-decoration: none;
+        font-family: montserrat;
+        font-weight: bolder;
+        font-size: 30px !important;
+        text-align: center;
+    }
+
+    .my-cont {
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: center;
+    }
+
+    .sottotitolo {
+        color: var(--Primary);
+        text-decoration: none;
+        font-family: montserrat;
+        font-weight: bolder;
+        font-size: 22px !important;
+        text-align: center;
+    }
+
+    .testo {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .my-text {
+        font-family: montserrat;
+    }
+
+    #Formm {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 450px;
+        font-family: montserrat;
+    }
+
+    #iimmgg {
+        width: 45%;
+        height: 45%;
+        position: relative;
+        left: calc(26%);
+    }
+
+    .dat {
+        display: flex;
+        padding: 5px;
+    }
+
+    .my-btn {
+        background-color: var(--Primary-Button) !important;
+        color: #fff !important;
+        width: 75%;
+        height: 55px;
+        border-radius: 15px !important;
+    }
+
+    .reg-card {
+        width: 500px !important;
+        height: 525px;
+        top: 30%;
+        background-color: #ffff;
+        border-radius: 15px;
+        box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
+    }*/
+    .log-in-card {
+        width: 450px !important;
+        height: 800px;
+        top: 30%;
+        background-color: #ffff;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-label {
+        font-size: 18px;
+    }
+
+    .my-btn {
+        background-color: var(--Primary-Button) !important;
+        color: #fff !important;
+        width: 100%;
+        height: 55px;
+        border-radius: 15px !important;
+    }
+
+    .form-control {
+        height: 55px;
+        border-radius: 15px !important;
+    }
+
+    .my-cont {
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: center;
+    }
+
+    .my-text {
+        font-family: montserrat;
+    }
+
+    .my-link {
+        color: var(--Primary-Button);
+    }
+</style>
+
+
+<div class="py-5">
+    <div class="my-cont">
+        <div class="log-in-card py-5">
+            <h1 class="titolo">REGISTRATI</h1>
+            <form asp-action="ConfirmEmail" class="py-5 px-5" method="post" name="form1" onsubmit="return validateMyForm(document.form1.Password);">
+                <div class="row text-center">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                </div>
+                <div class="mb-4">
+                    <label for="exampleInputEmail1" class="form-label my-text">Email</label>
+                    <input asp-for="Email" type="text" class="form-control" id="colFormLabelSm" placeholder="Email..." />
+                </div>
+                <div class="mb-4">
+                    <label for="exampleInputEmail1" class="form-label my-text">Username</label>
+                    <input asp-for="UserName" type="text" class="form-control" id="colFormLabelSm" placeholder="Username..." />
+                </div>
+                <div class="mb-4">
+                    <label for="exampleInputEmail1" class="form-label my-text">Nome</label>
+                    <input asp-for="Name" type="text" class="form-control" id="colFormLabelSm" placeholder="Nome..." />
+                </div>
+                <div class="mb-4">
+                    <label for="exampleInputPassword1" class="form-label my-text">Password <br /> <small>(deve contenere 7-20 caratteri, tra cui una maiuscola, un numero e un carattere speciale)</small></label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Password..." name="Password" id="Password">
+                </div>
+                @if (User.IsInRole("admin"))
+                {
+                    <div class="mb-4">
+                        <label for="exampleInputEmail1" class="form-label my-text">Ruolo</label>
+                        <select asp-for="Role" class="form-select">
+                            <option disabled selected>- Seleziona Ruolo -</option>
+                            <option value="admin">Admin</option>
+                            <option value="customer">Customer</option>
+                        </select>
+                    </div>
+                }
+                else
+                {
+                    <input asp-for="Role" value="customer" hidden />
+                }                
+                <button type="submit" class="btn my-btn my-text" value="Submit">REGISTRATI</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@*<div class="py-3">
+    <div class="my-cont">
+        <div class="reg-card py-5">
+            <h1 class="titolo">CREAZIONE ACCOUNT</h1>
+            <br>
+            <form asp-action="ConfirmEmail" class="test" id="Formm" method="post">
+                <div class="row text-center">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                </div>
+                <div class="row mb-2">
+                    <label for="colFormLabelSm" class="col-sm-4 col-form-label">Email</label>
+                    <div class="col-sm-8 dat">
+                        <input asp-for="Email" type="text" class="form-control form-control-sm" id="colFormLabelSm" placeholder="Email..." />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="colFormLabelSm" class="col-sm-4 col-form-label">Username</label>
+                    <div class="col-sm-8 dat">
+                        <input asp-for="UserName" type="text" class="form-control form-control-sm" id="colFormLabelSm" placeholder="Username..." />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="colFormLabelSm" class="col-sm-4 col-form-label" id="EmailSc">Nome</label>
+                    <div class="col-sm-8 dat">
+                        <input asp-for="Name" type="text" class="form-control form-control-sm" placeholder="Name...">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="colFormLabelSm" class="col-sm-4 col-form-label">Password</label>
+                    <div class="col-sm-8 dat">
+                        <input asp-for="Password" type="password" class="form-control form-control-sm" placeholder="Password..." />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="colFormLabelSm" class="col-sm-4 col-form-label" id="EmailSc">Ruolo</label>
+                    <div class="col-sm-8 dat">
+                        <select asp-for="Role" class="form-select">
+                            <option disabled selected>- Seleziona Ruolo -</option>
+                            <option value="admin">Admin</option>
+                            <option value="customer">Customer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2" style="text-align: center;">
+                    <div class="col-sm-12">
+                        <button class="btn my-btn" type="submit">REGISTRATI</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+*@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var navLink = document.getElementById("nav-profile");
+        navLink.classList += " nav-link-active";
+
+        function validateMyForm(inputtxt) {
+            var passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,20}$/;
+            if (!inputtxt.value.match(passw)) {
+                alert('La password deve contenere almeno 7 caratteri, tra cui una lettera maiuscola, un numero e un carattere speciale.');
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+    </script>
+}

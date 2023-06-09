@@ -1,0 +1,412 @@
+﻿@model WuphfWeb.Models.VM.UserVM
+
+@{
+    ViewData["Title"] = "Visualizza Utente";
+}
+
+<style>
+    /* pag utente */
+    .my-card {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 450px !important;
+    }
+
+    .pf-pic {
+        width: 39px;
+        float: left;
+        clip-path: circle(35% at center);
+    }
+
+    .my-name {
+        margin: 15px 0 0 40px;
+    }
+
+    .Commento {
+        width: 40px;
+    }
+
+    .username {
+        font-size: 30px;
+        font-weight: 600;
+    }
+
+    .user-lables {
+        font-size: 19px;
+        font-weight: 600
+    }
+
+    .numbers {
+        font-size: 16px;
+    }
+
+    .btn-user {
+        background-color: var(--Primary-Button) !important;
+        color: #fff !important;
+        height: 33pxx;
+        border-radius: 5px !important;
+    }
+
+    .comment {
+        border: none !important;
+    }
+
+        .comment:active {
+            border: none !important;
+            color: var(--Primary-Button) !important;
+        }
+
+    .like {
+        border: none !important;
+    }
+
+        .like:active {
+            border: none !important;
+            color: var(--Primary-Button) !important;
+        }
+
+    .like-active {
+        color: var(--Primary-Button) !important;
+    }
+
+    .dati {
+        display: flex;
+        margin: 50px !important;
+        margin-top: 42px !important;
+    }
+
+    .row-cols-2 {
+        width: 250px;
+    }
+
+    .my-btn {
+        background-color: var(--Primary-Button) !important;
+        color: #fff !important;
+        width: 100%;
+        height: 40px;
+        border-radius: 15px !important;
+    }
+
+    .my-btn-2 {
+        background-color: var(--Secondary-Button) !important;
+        border: 2px solid var(--Primary-Button) !important;
+        width: 100%;
+        height: 40px;
+        border-radius: 15px !important;
+    }
+
+    .bottoni {
+        display: flex;
+        margin-bottom: 17px;
+        margin-top: 25px;
+    }
+</style>
+
+@if (User.Identity.Name == Model.UserDTO.UserName)
+{
+    <div class="container" style="font-family: Montserrat; margin-top: 150px;">
+        <div class="card my-card shadow-sm mb-3 p-4">
+            <h1 class="username mb-4">@Model.UserDTO.UserName</h1>
+            <div class="row overflow-x-hidden">
+                <div class="col-3">
+                    <div class="circle">
+                        <img src="@Model.UserDTO.FotoProfilo" style="width: 75px; clip-path: circle(35% at center);">
+                    </div>
+                </div>
+                <div class="col-3 text-center overflow-x-hidden">
+                    <div class="user-lables">Post</div>
+                    <div class="numbers" id="numero-post">@Model.UserDTO.NumeroPost</div>
+                </div>
+                <div class="col-3 text-center overflow-x-hidden">
+                    <div class="user-lables">Follower</div>
+                    <div class="numbers">@Model.UserDTO.NumeroFollower</div>
+                </div>
+                <div class="col-3 text-center overflow-x-hidden">
+                    <div class="user-lables">Seguiti</div>
+                    <div class="numbers">@Model.UserDTO.NumeroFollowing</div>
+                </div>
+            </div>
+            <div class="d-flex mt-4">
+                <a href="/Utente/Profile" class="btn btn-user me-3">Modifica</a>
+                <a class="btn btn-user" href="/Auth/Logout">Logout</a>
+
+            </div>
+        </div>
+        <div class="container mb-2" id="posts">
+            @foreach (var post in Model.Posts)
+            {
+                <div class="my-card" style="margin-top: 15px">
+                    <div class="card shadow-sm ">
+                        <div class="card-body row">
+                            <div class="col-1">
+                                <img class="pf-pic" src="@Model.UserDTO.FotoProfilo">
+                            </div>
+                            <div class="col-8 ps-4 overflow-x-hidden" style="margin: 10px 0 0 5px">
+                                <p class="card-text">@Model.UserDTO.UserName</p>
+                            </div>
+                            <div class="col-1 me-2">
+                                <a class="btn btn-user me-3" style="background-color: orange !important;" href="/Post/UpdatePost?id=@post.Id"><i class="bi bi-pencil-square"></i></a>
+                            </div>
+                            <div class="col-1">
+                                <button class="btn btn-user me-3" onclick=Delete("/Post/DeletePost?id =@post.Id") style="background-color: red !important;"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                        @if (post.Immagine == null && post.Video != null)
+                        {
+                            <video style="width: 100%; height: 100%;" controls>
+                                <source src="@post.Video" type="video/mp4">
+                                <source src="@post.Video" type="video/ogg">
+                                Your browser does not support HTML video.
+                            </video>
+                        }
+                        else
+                        {
+                            <img class="bd-placeholder-img card-img-top" width="100%" height="100%" src="@post.Immagine" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                        }
+                        <div class="card-body">
+                            <div class="d-flex float-end">
+                                <div class="material-symbols-outlined me-3">sound_detection_dog_barking</div>
+                                <p>@post.LikeCount</p>
+                            </div>
+                            <p class="card-text">@post.Testo</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="">
+                                    <a class="btn comment" href="/Post/GetPost?id=@post.Id"><i class="bi bi-chat-right-dots"></i></a>
+                                </div>
+                                @if (post.DataUpdate != null)
+                                {
+                                    <small class="text-muted">@TimeZoneInfo.ConvertTime(post.DataCreazione, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time")) (modificato il @TimeZoneInfo.ConvertTime((DateTime)post.DataUpdate, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time")))</small>
+                                }
+                                else
+                                {
+                                    <small class="text-muted">@TimeZoneInfo.ConvertTime(post.DataCreazione, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"))</small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="container" style="font-family: Montserrat; margin-top: 150px;">
+        <div class="card my-card shadow-sm mb-3 p-4">
+            <h1 class="username mb-4">@Model.UserDTO.UserName</h1>
+            <div class="row overflow-x-hidden">
+                <div class="col-3">
+                    <div class="circle">
+                        <img src="@Model.UserDTO.FotoProfilo" style="width: 75px; clip-path: circle(35% at center);">
+                    </div>
+                </div>
+                <div class="col-3 text-center overflow-x-hidden">
+                    <div class="user-lables">Post</div>
+                    <div class="numbers" id="numero-post">@Model.UserDTO.NumeroPost</div>
+                </div>
+                <div class="col-3 text-center overflow-x-hidden">
+                    <div class="user-lables">Follower</div>
+                    <div class="numbers">@Model.UserDTO.NumeroFollower</div>
+                </div>
+                <div class="col-3 text-center overflow-x-hidden">
+                    <div class="user-lables">Seguiti</div>
+                    <div class="numbers">@Model.UserDTO.NumeroFollowing</div>
+                </div>
+            </div>
+            <div class="row justify-content-center bottoni">
+                <div class="col-md-6">
+                    <form method="post" asp-controller="Utente" asp-action="Follow" enctype="multipart/form-data">
+                        <input asp-for="SegueDTO.userName" value="@Model.UserDTO.UserName" hidden />
+                        @if (!Model.UserDTO.IsSeguito)
+                        {
+                            <button class="btn my-btn" type="submit">Segui</button>
+                        }
+                        else
+                        {
+                            <button class="btn my-btn" type="submit">Smetti di seguire</button>
+                        }
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    @if (!Model.UserDTO.IsChat)
+                    {
+                        <form method="post" asp-controller="Chat" asp-action="CreateOrDeleteChat" enctype="multipart/form-data">
+                            <input asp-for="ChatCreateDTO.FkUser2" value="@Model.UserDTO.UserName" hidden />
+                            <button class="btn my-btn-2" type="submit">Messaggio</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-controller="Chat" asp-action="CreateOrDeleteChat" enctype="multipart/form-data">
+                            <input asp-for="ChatCreateDTO.FkUser2" value="@Model.UserDTO.UserName" hidden />
+                            <button class="btn my-btn-2" type="submit">Elimina chat</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+        @foreach (var post in Model.Posts)
+        {
+            <div class="my-card">
+                <div class="card shadow-sm ">
+                    <div class="card-body">
+                        <img class="pf-pic" src="@Model.UserDTO.FotoProfilo">
+                        <p class="card-text my-name">@Model.UserDTO.UserName</p>
+                    </div>
+                    @if (post.Immagine == null && post.Video != null)
+                    {
+                        <video style="width: 100%; height: 100%;" controls>
+                            <source src="@post.Video" type="video/mp4">
+                            <source src="@post.Video" type="video/ogg">
+                            Your browser does not support HTML video.
+                        </video>
+                    }
+                    else
+                    {
+                        <img class="bd-placeholder-img card-img-top" width="100%" height="100%" src="@post.Immagine" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" />
+                    }
+                    <div class="card-body">
+                        <div class="d-flex float-end">
+                            <div class="material-symbols-outlined me-3">sound_detection_dog_barking</div>
+                            <p id="@post.Id">@post.LikeCount</p>
+                        </div>
+                        <p class="card-text">@post.Testo</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                @if (post.IsLiked)
+                                {
+                                    <button type="button" class="btn material-symbols-outlined like likeButton like-active" data-liked="1" data-id="@post.Id" id="Like" data-effetto-audio="/audio/dog-crying-for-a-hugwav-14912-[AudioTrimmer (mp3cut.net).mp3">sound_detection_dog_barking</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn material-symbols-outlined like likeButton" data-liked="0" data-id="@post.Id" id="Like" data-effetto-audio="/audio/abbaio.mp3">sound_detection_dog_barking</button>
+                                }
+                                <a class="btn" href="/Post/GetPost?id=@post.Id"><i class="bi bi-chat-right-dots"></i></a>
+                            </div>
+                            @if (post.DataUpdate != null)
+                            {
+                                <small class="text-muted">@TimeZoneInfo.ConvertTime(post.DataCreazione, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time")) (modificato il @TimeZoneInfo.ConvertTime((DateTime)post.DataUpdate, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time")))</small>
+                            }
+                            else
+                            {
+                                <small class="text-muted">@TimeZoneInfo.ConvertTime(post.DataCreazione, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"))</small>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        }
+    </div>
+}
+
+@section Scripts{
+    <script>
+        let nav = document.getElementById('nav');
+        nav.classList += ' fixed-top';
+
+        function Delete(url) {
+            Swal.fire({
+                title: 'Sei sicuro?',
+                text: "Non si torna indietro!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Conferma',
+                cancelButtonText: 'Annulla'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        success: function (data) {
+                            if (data.success) {
+                                toastr.success(data.message);
+                                var numeroPost = document.getElementById("numero-post");
+                                var n = parseInt(numeroPost.innerHTML);
+                                n -= 1;
+                                numeroPost.innerHTML = n;
+                                $('#posts').load(document.URL + ' #posts');
+                            } else {
+                                toastr.error(data.message);
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        $(".likeButton").on("click", function () {
+            var id = parseInt($(this).attr("data-id"));
+            var liked = parseInt($(this).attr("data-liked"));
+            var postText = document.getElementById(id.toString());
+            var likeCount = parseInt(postText.innerHTML);
+
+            if (id !== null) {
+
+                $.ajax({
+                    url: "/Home/LikeToPost?id=" + id,
+                    method: "GET",
+                    success: function (result) {
+                        /*$('#' + id).load(document.URL + ' #' + id);*/
+                    },
+                    //error: function (error) {
+                    //    alert("Fail");
+                    //}
+                });
+            }
+            if (liked == 0) {
+                likeCount += 1;
+                postText.innerHTML = likeCount;
+                (this).classList = "btn material-symbols-outlined like likeButton like-active";
+                this.dataset.liked = 1;
+                var audio = new Audio(this.dataset.effettoAudio);
+                audio.bottone_di_riferimento = (this);
+                audio.addEventListener('canplaythrough',
+                    function (evento_load) {
+                        var bottone = evento_load.target.bottone_di_riferimento;
+                        bottone.disabled = false;
+                        bottone.audio_di_riferimento = evento_load.target;
+                        //bottone.addEventListener('click',
+                        //    function (evento_click) {
+                        //        evento_click.target.audio_di_riferimento.play();
+                        //    }
+                        //);
+                        bottone.audio_di_riferimento.play();
+                    }
+                );
+                this.dataset.effettoAudio = "/audio/dog-crying-for-a-hugwav-14912-[AudioTrimmer (mp3cut.net).mp3";
+            }
+            else {
+                likeCount -= 1;
+                postText.innerHTML = likeCount;
+                (this).classList = "btn material-symbols-outlined like likeButton";
+                this.dataset.liked = 0;
+                var audio = new Audio(this.dataset.effettoAudio);
+                audio.bottone_di_riferimento = (this);
+                audio.addEventListener('canplaythrough',
+                    function (evento_load) {
+                        var bottone = evento_load.target.bottone_di_riferimento;
+                        bottone.disabled = false;
+                        bottone.audio_di_riferimento = evento_load.target;
+                        //bottone.addEventListener('click',
+                        //    function (evento_click) {
+                        //        evento_click.target.audio_di_riferimento.play();
+                        //    }
+                        //);
+                        bottone.audio_di_riferimento.play();
+                    }
+                );
+                this.dataset.effettoAudio = "/audio/abbaio.mp3";
+            }
+
+        });
+    </script>
+    <script>
+        var navLink = document.getElementById("nav-profile");
+        navLink.classList += " nav-link-active";
+    </script>
+
+}

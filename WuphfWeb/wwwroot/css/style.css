@@ -1,0 +1,153 @@
+:root{
+    --Primary: rgb(42, 7, 4);
+    --Secondary: rgb(255, 245, 254);
+    --Primary-Button: rgb(10, 184, 30);
+    --Secondary-Button: rgb(238, 231, 231);
+    --Accent: rgb(22, 206, 9);
+}
+
+
+
+body {
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-image: url(/images/Sfondo.jpg);
+    overflow-x: hidden;
+}
+
+.split3{
+  display: flex;
+}
+
+.logo{
+  padding-top: 5px;
+  padding-left: 20px;
+  margin-right: 20px;
+  float: left;
+  
+}
+
+.titolo{
+  color: var(--Primary);
+  text-decoration: none;
+  font-family: montserrat;
+  font-weight: bolder;
+  font-size: 30px !important;
+}
+  
+.search{
+  padding-left: 800px;
+  padding-top: 60px;
+}
+
+.my-nav-item {
+  font-weight: 500 !important;
+}
+
+.my-nav-item:hover{
+  color: var(--Primary-Button) !important;
+}
+
+.my-nav{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (max-width: 992px) {
+  .my-nav{
+    margin-top: 30px;
+    margin-left: 5px;
+    margin-bottom: 30px !important;
+  }
+
+  .my-nav-item {
+    font-weight: 400 !important;
+  }
+}
+
+.form-control:focus{
+  box-shadow: 0 0 0 0.08rem var(--Primary-Button) !important;
+}
+
+.my-form {
+  max-width: 50%;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none !important;
+  border: none;
+}
+
+.my-nav-item:focus-visible{
+  box-shadow: none !important;
+  color: var(--Primary-Button) !important;
+}
+
+@media screen and (max-width: 576px) {
+    #Formm {
+        width: auto;
+    }
+}
+
+
+.search-card {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: absolute !important;
+    width: 214.62px;
+    max-height: 200px !important;
+}
+
+    .search-card::-webkit-scrollbar {
+        display: none;
+    }
+
+.form-control {
+    border-color: transparent;
+}
+
+    .form-control:focus {
+        border-color: transparent;
+        box-shadow: inset 0px 0px 0px 1px transparent;
+    }
+
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.mess-1 {
+    background-color: var(--Secondary-Button);
+}
+
+.mess-2 {
+    background-color: var(--Primary-Button);
+}
+
+.nav-link-active {
+    color: var(--Primary-Button) !important;
+}
+
+
+/* scrollbar **************************************************************************************/
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    display: none;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        display: none;
+    } 

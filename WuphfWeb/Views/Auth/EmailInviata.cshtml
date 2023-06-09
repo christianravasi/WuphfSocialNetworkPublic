@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Email Inviata";
+}
+
+<style>
+    .my-cont {
+      display: flex;
+      justify-content: center;
+    }
+
+    .my-text {
+      font-family: montserrat;
+    }
+</style>
+
+<div class="py-5">
+      <div class="my-cont flex-column align-items-center">
+          <h1 class="titolo">EMAIL INVIATA!</h1>
+          <p class="mt-3">Ti abbiamo inviato una Email di conferma.</p>
+          <img src="~/images/Email-Gif.gif " style="width: 400px" class="shadow-lg border mt-5">
+      </div>
+</div>
+
+@section Scripts{
+        <script>
+            var navLink = document.getElementById("nav-profile");
+            navLink.classList += " nav-link-active";
+        </script>
+}
